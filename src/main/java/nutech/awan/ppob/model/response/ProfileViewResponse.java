@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ProfileCRUDResponse {
+public class ProfileViewResponse {
 
     private String email;
     private String firstName;

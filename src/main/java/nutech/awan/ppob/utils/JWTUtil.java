@@ -9,6 +9,9 @@ import java.util.Date;
 @Component
 public class JWTUtil {
 
+    public static final String TOKEN_HEADER = "Authorization";
+    public static final String BEARER_TOKEN_PREFIX = "Bearer ";
+
     @Value("jwt.key")
     private String key;
 
@@ -25,10 +28,21 @@ public class JWTUtil {
                 .compact();
     }
 
-    public Claims parseToken(String token) {
+    private Claims parseToken(String token) {
 
         JwtParser jwtParser = Jwts.parser().setSigningKey(key);
         Jws<Claims> claimsJws = jwtParser.parseClaimsJws(token);
+        return claimsJws.getBody();
+    }
+
+    public Claims parseBearerToken(String bearerToken) {
+
+        if (!bearerToken.startsWith(BEARER_TOKEN_PREFIX)) {
+            throw new RequiredTypeException("Type must Bearer");
+        }
+
+        JwtParser jwtParser = Jwts.parser().setSigningKey(key);
+        Jws<Claims> claimsJws = jwtParser.parseClaimsJws(bearerToken.substring(BEARER_TOKEN_PREFIX.length()));
         return claimsJws.getBody();
     }
 

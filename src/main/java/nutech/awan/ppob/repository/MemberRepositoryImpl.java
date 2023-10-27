@@ -77,7 +77,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public boolean isExist(String email) {
+    public boolean isIdExist(String email) {
 
         try (
                 Connection connection = dataSource.getConnection();
@@ -90,7 +90,7 @@ public class MemberRepositoryImpl implements MemberRepository {
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            return resultSet.next();
+            return resultSet.first();
 
         } catch (SQLException e) {
             e.printStackTrace();

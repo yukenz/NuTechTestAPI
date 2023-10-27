@@ -50,7 +50,15 @@ public class MembershipControllerImpl implements MembershipController {
 
     @Override
     public WebResponse<ProfileViewResponse> profile(Member member) {
-        return null;
+
+        ProfileViewResponse profile = membershipService.profile(member);
+
+        return WebResponse.<ProfileViewResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(messageSource.getMessage("success", null, Locale.of("id", "ID")))
+                .data(profile)
+                .build();
+
     }
 
     @Override

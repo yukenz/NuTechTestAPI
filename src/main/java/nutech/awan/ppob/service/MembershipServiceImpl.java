@@ -40,7 +40,7 @@ public class MembershipServiceImpl implements MembershipService {
 
         validationService.validateObject(registrationRequest);
 
-        if (memberRepository.isExist(registrationRequest.getEmail())) {
+        if (memberRepository.isIdExist(registrationRequest.getEmail())) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "email sudah terdaftar");
         }
 
@@ -93,7 +93,12 @@ public class MembershipServiceImpl implements MembershipService {
     @Override
     public ProfileViewResponse profile(Member member) {
 
-        return null;
+        return ProfileViewResponse.builder()
+                .email(member.getEmail())
+                .firstName(member.getFirstName())
+                .lastName(member.getLastName())
+                .profileImage(member.getProfileImage())
+                .build();
     }
 
     @Override

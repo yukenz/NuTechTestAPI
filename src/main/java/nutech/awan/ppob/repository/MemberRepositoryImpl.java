@@ -57,7 +57,7 @@ public class MemberRepositoryImpl implements MemberRepository {
         try (
                 Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(
-                        String.format("insert into %s (email, first_name, last_name, password) values (?, ?, ?, ?);", MemberRepository.TABLENAME)
+                        String.format("insert into %s (email, first_name, last_name, password, profile_image, balance) values (?, ?, ?, ?, ?, ?);", MemberRepository.TABLENAME)
                 );
         ) {
 
@@ -65,6 +65,8 @@ public class MemberRepositoryImpl implements MemberRepository {
             preparedStatement.setString(2, member.getFirstName());
             preparedStatement.setString(3, member.getLastName());
             preparedStatement.setString(4, member.getPassword());
+            preparedStatement.setString(5, member.getProfileImage());
+            preparedStatement.setLong(6, member.getBalance());
 
             preparedStatement.execute();
 

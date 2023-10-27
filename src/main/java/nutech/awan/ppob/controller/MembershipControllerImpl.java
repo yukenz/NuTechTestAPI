@@ -38,7 +38,14 @@ public class MembershipControllerImpl implements MembershipController {
 
     @Override
     public WebResponse<LoginResponse> login(LoginRequest form) {
-        return null;
+
+        LoginResponse loginResponse = membershipService.login(form);
+
+        return WebResponse.<LoginResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(messageSource.getMessage("login_success", null, Locale.of("id", "ID")))
+                .data(loginResponse)
+                .build();
     }
 
     @Override

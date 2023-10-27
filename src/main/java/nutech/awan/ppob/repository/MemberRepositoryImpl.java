@@ -12,13 +12,43 @@ import java.util.Optional;
 @Component
 public class MemberRepositoryImpl implements MemberRepository {
 
-
     @Autowired
     HikariDataSource dataSource;
 
     @Override
     public Optional<Member> findById(String email) {
-        return Optional.empty();
+
+        try (
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(
+                        String.format("select * from %s where email = ?;", MemberRepository.TABLENAME)
+                );
+        ) {
+
+            preparedStatement.setString(1, email);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            //Kosong
+            if (!resultSet.first()) {
+                return Optional.empty();
+            }
+
+            Member member = Member.builder()
+                    .email(resultSet.getString("email"))
+                    .password(resultSet.getString("password"))
+                    .firstName(resultSet.getString("first_name"))
+                    .lastName(resultSet.getString("last_name"))
+                    .balance(resultSet.getLong("balance"))
+                    .build();
+
+            //Isi
+            return Optional.of(member);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            //Err
+            return Optional.empty();
+        }
+
     }
 
     @Override

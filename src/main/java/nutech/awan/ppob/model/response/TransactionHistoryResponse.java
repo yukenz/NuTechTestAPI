@@ -15,6 +15,6 @@ public class TransactionHistoryResponse {
 
     private Integer offset;
     private Integer limit;
-    private List<ListTransactionHistory> transactionHistories;
+    private List<ListTransactionHistory> records;
 
 }

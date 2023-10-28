@@ -154,7 +154,7 @@ public class TransactionServiceImpl implements TransactionService {
             return TransactionHistoryResponse.builder()
                     .offset(offset)
                     .limit(limit)
-                    .transactionHistories(listTransactionHistories)
+                    .records(listTransactionHistories)
                     .build();
 
         } catch (SQLException e) {

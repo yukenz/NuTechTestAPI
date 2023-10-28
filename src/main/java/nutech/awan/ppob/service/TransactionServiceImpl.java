@@ -2,11 +2,14 @@ package nutech.awan.ppob.service;
 
 import jakarta.validation.ConstraintViolationException;
 import nutech.awan.ppob.model.entity.Member;
+import nutech.awan.ppob.model.entity.ServicePayment;
+import nutech.awan.ppob.model.entity.TransactionHistory;
 import nutech.awan.ppob.model.request.TopUpRequest;
-import nutech.awan.ppob.model.request.TransactionRequest;
 import nutech.awan.ppob.model.response.TopUpAndBalanceResponse;
 import nutech.awan.ppob.model.response.TransactionHistoryResponse;
+import nutech.awan.ppob.model.response.TransactionResponse;
 import nutech.awan.ppob.repository.interfaces.MemberRepository;
+import nutech.awan.ppob.repository.interfaces.TransactionHistoriRepository;
 import nutech.awan.ppob.service.interfaces.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -14,7 +17,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,6 +32,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private TransactionHistoriRepository transactionHistoriRepository;
 
     @Autowired
     private MessageSource messageSource;
@@ -67,12 +76,56 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TopUpAndBalanceResponse transaction(Member member, TransactionRequest transactionRequest) {
-        return null;
+    public TransactionResponse transaction(Member member, ServicePayment servicePayment) {
+
+        //Time Stamp
+        Instant now = Instant.now();
+
+        //Check Balance For Transaction
+        Long moneyAfter = validationService.validateBalance(member.getBalance(), servicePayment.getPrice());
+
+        TransactionHistory transactionHistory = TransactionHistory.builder()
+                .invoice(createInvoice(now))
+                .memberEmail(member.getEmail())
+                .description(servicePayment.getDescription())
+                .amount(servicePayment.getPrice())
+                .type(TransactionHistory.TransactionType.PAYMENT)
+                .createdOn(now)
+                .build();
+        try {
+            transactionHistoriRepository.save(transactionHistory);
+            member.setBalance(moneyAfter);
+            memberRepository.update(member);
+        } catch (SQLException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    e.getMessage()
+            );
+        }
+
+        return TransactionResponse.builder()
+                .invoice_number(transactionHistory.getInvoice())
+                .service_code(servicePayment.getCode())
+                .service_name(servicePayment.getName())
+                .transaction_type(transactionHistory.getType().value())
+                .total_amount(transactionHistory.getAmount())
+                .created_on(transactionHistory.getCreatedOn())
+                .build();
     }
 
     @Override
     public List<TransactionHistoryResponse> transactionHistory(Member member, Integer offset, Integer limit) {
         return null;
+    }
+
+    @Override
+    public String createInvoice(Instant instantTime) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy-HHmmssSS");
+
+        String dateHash = sdf.format(Date.from(instantTime));
+
+        return String.format("INV%s", dateHash);
+
     }
 }

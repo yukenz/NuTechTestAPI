@@ -1,11 +1,11 @@
 package nutech.awan.ppob.repository.interfaces;
 
 import nutech.awan.ppob.model.entity.ServicePayment;
-import nutech.awan.ppob.model.response.ListServiceResponse;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ServicePaymentRepository {
@@ -14,4 +14,6 @@ public interface ServicePaymentRepository {
 
 
     List<ServicePayment> findAll() throws SQLException;
+
+    Optional<ServicePayment> findById(String code);
 }

@@ -33,16 +33,16 @@ public class MembershipServiceImpl implements MembershipService {
     private String appUrl;
 
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
 
     @Autowired
-    ImageResource imageResource;
+    private ImageResource imageResource;
 
     @Autowired
-    JWTUtil jwtUtil;
+    private JWTUtil jwtUtil;
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 
     @Autowired
     private ValidationService validationService;

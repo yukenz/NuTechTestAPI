@@ -13,7 +13,7 @@ import java.util.Optional;
 public class MemberRepositoryImpl implements MemberRepository {
 
     @Autowired
-    HikariDataSource dataSource;
+    private HikariDataSource dataSource;
 
     @Override
     public Optional<Member> findById(String email) {

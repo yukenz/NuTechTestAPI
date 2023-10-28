@@ -1,7 +1,7 @@
 package nutech.awan.ppob.repository;
 
 import com.zaxxer.hikari.HikariDataSource;
-import nutech.awan.ppob.model.response.ListBannerResponse;
+import nutech.awan.ppob.model.entity.Banner;
 import nutech.awan.ppob.repository.interfaces.BannerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,28 +20,29 @@ public class BannerRepositoryImpl implements BannerRepository {
     private HikariDataSource dataSource;
 
     @Override
-    public List<ListBannerResponse> findAll() throws SQLException {
+    public List<Banner> findAll() throws SQLException {
 
         try (
                 Connection connection = dataSource.getConnection();
                 Statement statement = connection.createStatement()
         ) {
 
-            List<ListBannerResponse> listBannerResponses = new ArrayList<>();
+            List<Banner> banners = new ArrayList<>();
 
             ResultSet resultSet = statement.executeQuery(
                     String.format("select * from %s", BannerRepository.TABLENAME)
             );
 
             while (resultSet.next()) {
-                listBannerResponses.add(ListBannerResponse.builder()
-                        .banner_name(resultSet.getString("name"))
-                        .banner_image("image_url")
+                banners.add(Banner.builder()
+                        .id(resultSet.getInt("id"))
+                        .name(resultSet.getString("name"))
+                        .image_url("image_url")
                         .description("description")
                         .build());
             }
 
-            return listBannerResponses;
+            return banners;
         } catch (SQLException e) {
             throw e;
         }

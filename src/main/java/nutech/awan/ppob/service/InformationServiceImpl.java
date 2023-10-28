@@ -1,5 +1,6 @@
 package nutech.awan.ppob.service;
 
+import nutech.awan.ppob.model.entity.Banner;
 import nutech.awan.ppob.model.response.ListBannerResponse;
 import nutech.awan.ppob.model.response.ListServiceResponse;
 import nutech.awan.ppob.repository.interfaces.BannerRepository;
@@ -22,7 +23,16 @@ public class InformationServiceImpl implements InformationService {
     public List<ListBannerResponse> banner() {
 
         try {
-            return bannerRepository.findAll();
+
+            List<Banner> banners = bannerRepository.findAll();
+
+            //Transform to response
+            return banners.stream().map(banner -> ListBannerResponse.builder()
+                    .banner_name(banner.getName())
+                    .banner_image(banner.getImage_url())
+                    .description(banner.getDescription())
+                    .build()).toList();
+
         } catch (SQLException ex) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,

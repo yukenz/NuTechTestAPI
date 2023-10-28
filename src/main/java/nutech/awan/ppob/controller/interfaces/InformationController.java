@@ -22,7 +22,7 @@ public interface InformationController {
 
     /* GET: service | TOKEN */
     @GetMapping(
-            path = "/service",
+            path = "/services",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     WebResponse<List<ListServiceResponse>> service(Member member);

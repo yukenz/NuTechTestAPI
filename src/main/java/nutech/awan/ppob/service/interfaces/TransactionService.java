@@ -20,7 +20,7 @@ public interface TransactionService {
 
     TransactionResponse transaction(Member member, ServicePayment servicePayment);
 
-    List<TransactionHistoryResponse> transactionHistory(Member member, Integer offset, Integer limit);
+    TransactionHistoryResponse transactionHistory(Member member, Integer offset, Integer limit);
 
     String createInvoice(Instant instantTime);
 }

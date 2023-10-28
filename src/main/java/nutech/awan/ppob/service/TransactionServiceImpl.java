@@ -5,6 +5,7 @@ import nutech.awan.ppob.model.entity.Member;
 import nutech.awan.ppob.model.entity.ServicePayment;
 import nutech.awan.ppob.model.entity.TransactionHistory;
 import nutech.awan.ppob.model.request.TopUpRequest;
+import nutech.awan.ppob.model.response.ListTransactionHistory;
 import nutech.awan.ppob.model.response.TopUpAndBalanceResponse;
 import nutech.awan.ppob.model.response.TransactionHistoryResponse;
 import nutech.awan.ppob.model.response.TransactionResponse;
@@ -13,6 +14,8 @@ import nutech.awan.ppob.repository.interfaces.TransactionHistoriRepository;
 import nutech.awan.ppob.service.interfaces.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Stream;
 
 @Component
 public class TransactionServiceImpl implements TransactionService {
@@ -129,8 +133,37 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionHistoryResponse> transactionHistory(Member member, Integer offset, Integer limit) {
-        return null;
+    public TransactionHistoryResponse transactionHistory(Member member, Integer offset, Integer limit) {
+
+        PageRequest pageRequest = PageRequest.of(offset, limit, Sort.by(
+                Sort.Order.desc("created_on")
+        ));
+
+        try {
+            List<ListTransactionHistory> listTransactionHistories = transactionHistoriRepository.findAllByEmail(member.getEmail(), pageRequest)
+                    .stream().map(transactions -> ListTransactionHistory.builder()
+                            .invoice_number(transactions.getInvoice())
+                            .transaction_type(transactions.getType().value())
+                            .description(transactions.getDescription())
+                            .total_amount(transactions.getAmount())
+                            .created_on(transactions.getCreatedOn())
+                            .build()
+                    ).toList();
+
+
+            return TransactionHistoryResponse.builder()
+                    .offset(offset)
+                    .limit(limit)
+                    .transactionHistories(listTransactionHistories)
+                    .build();
+
+        } catch (SQLException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    e.getMessage()
+            );
+        }
+
     }
 
     @Override

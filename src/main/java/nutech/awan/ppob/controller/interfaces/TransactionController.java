@@ -42,10 +42,10 @@ public interface TransactionController {
             path = "/transaction/history",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    WebResponse<List<TransactionHistoryResponse>> transactionHistory(
+    WebResponse<TransactionHistoryResponse> transactionHistory(
             Member member,
             @RequestParam(defaultValue = "0") Integer offset,
-            @RequestParam(required = false) Integer limit
+            @RequestParam(required = false,defaultValue = "100") Integer limit
     );
 
 

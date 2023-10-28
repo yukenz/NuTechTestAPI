@@ -14,7 +14,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Locale;
 
 @Component
@@ -63,7 +62,14 @@ public class TransactionControllerImpl implements TransactionController {
     }
 
     @Override
-    public WebResponse<List<TransactionHistoryResponse>> transactionHistory(Member member, Integer offset, Integer limit) {
-        return null;
+    public WebResponse<TransactionHistoryResponse> transactionHistory(Member member, Integer offset, Integer limit) {
+
+        TransactionHistoryResponse transactionHistoryResponse = transactionService.transactionHistory(member, offset, limit);
+
+        return WebResponse.<TransactionHistoryResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(messageSource.getMessage("history_success", null, Locale.of("id", "ID")))
+                .data(transactionHistoryResponse)
+                .build();
     }
 }

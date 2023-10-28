@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.Instant;
 
 @Data
 @Builder
@@ -18,6 +18,6 @@ public class TransactionResponse {
     private String service_name;
     private String transaction_type;
     private Long total_amount;
-    private Date created_on;
+    private Instant created_on;
 
 }

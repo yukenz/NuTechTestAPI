@@ -1,5 +1,6 @@
 package nutech.awan.ppob.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import nutech.awan.ppob.controller.interfaces.MembershipController;
 import nutech.awan.ppob.model.entity.Member;
 import nutech.awan.ppob.model.request.LoginRequest;
@@ -74,7 +75,14 @@ public class MembershipControllerImpl implements MembershipController {
     }
 
     @Override
-    public WebResponse<ProfileViewResponse> profilImage(Member member, MultipartFile fileForm) {
-        return null;
+    public WebResponse<ProfileViewResponse> profilImage(Member member, HttpServletRequest request) {
+
+        ProfileViewResponse profileViewResponse = membershipService.profileImage(member, request);
+
+        return WebResponse.<ProfileViewResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(messageSource.getMessage("profile_image_update_success", null, Locale.of("id", "ID")))
+                .data(profileViewResponse)
+                .build();
     }
 }

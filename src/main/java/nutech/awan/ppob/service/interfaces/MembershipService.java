@@ -1,5 +1,6 @@
 package nutech.awan.ppob.service.interfaces;
 
+import jakarta.servlet.http.HttpServletRequest;
 import nutech.awan.ppob.model.entity.Member;
 import nutech.awan.ppob.model.request.LoginRequest;
 import nutech.awan.ppob.model.request.ProfileUpdateRequest;
@@ -8,6 +9,8 @@ import nutech.awan.ppob.model.response.LoginResponse;
 import nutech.awan.ppob.model.response.ProfileViewResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 public interface MembershipService {
@@ -20,7 +23,7 @@ public interface MembershipService {
 
     ProfileViewResponse profileUpdate(Member member, ProfileUpdateRequest profileUpdateRequest);
 
-    ProfileViewResponse profileImage(Member member, MultipartFile fileForm);
+    ProfileViewResponse profileImage(Member member, HttpServletRequest request);
 
 
 }

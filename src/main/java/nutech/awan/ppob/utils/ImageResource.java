@@ -10,6 +10,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Component
 public class ImageResource implements ResourceLoaderAware {
@@ -32,18 +35,22 @@ public class ImageResource implements ResourceLoaderAware {
         }
     }
 
-    public boolean isValidImage(InputStream inputStream) {
+    public void saveImage(InputStream inputStream, String fileName) throws IOException {
 
-        try (inputStream) {
-            BufferedImage image = ImageIO.read(inputStream);
-            image.getHeight();
-            image.getWidth();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+        String classPath = CLASS_PATH_FOLDER;
+        Resource assetsFolder = resourceLoader.getResource(classPath);
+
+        Path pathFile = Path.of(Path.of(assetsFolder.getURI()).toString() + "/" + fileName);
+
+        //Create
+        Files.createFile(pathFile);
+
+
+        //Write ke file
+        try (OutputStream outputStream = Files.newOutputStream(pathFile)) {
+            outputStream.write(inputStream.readAllBytes());
         }
 
-        return true;
     }
 
 }

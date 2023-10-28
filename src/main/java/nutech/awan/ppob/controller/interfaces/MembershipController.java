@@ -1,5 +1,6 @@
 package nutech.awan.ppob.controller.interfaces;
 
+import jakarta.servlet.http.HttpServletRequest;
 import nutech.awan.ppob.model.entity.Member;
 import nutech.awan.ppob.model.request.LoginRequest;
 import nutech.awan.ppob.model.request.ProfileUpdateRequest;
@@ -9,7 +10,6 @@ import nutech.awan.ppob.model.response.ProfileViewResponse;
 import nutech.awan.ppob.model.response.WebResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public interface MembershipController {
@@ -48,10 +48,10 @@ public interface MembershipController {
     /* PUT: profile->image | TOKEN */
     @PutMapping(
             path = "/profile/image",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            consumes = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    WebResponse<ProfileViewResponse> profilImage(Member member, @RequestPart MultipartFile fileForm);
+    WebResponse<ProfileViewResponse> profilImage(Member member, HttpServletRequest request);
 
 
 }

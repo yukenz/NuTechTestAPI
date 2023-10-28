@@ -1,5 +1,7 @@
 package nutech.awan.ppob.service;
 
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.http.HttpServletRequest;
 import nutech.awan.ppob.model.entity.Member;
 import nutech.awan.ppob.model.request.LoginRequest;
 import nutech.awan.ppob.model.request.ProfileUpdateRequest;
@@ -8,24 +10,33 @@ import nutech.awan.ppob.model.response.LoginResponse;
 import nutech.awan.ppob.model.response.ProfileViewResponse;
 import nutech.awan.ppob.repository.interfaces.MemberRepository;
 import nutech.awan.ppob.service.interfaces.MembershipService;
+import nutech.awan.ppob.utils.ImageResource;
 import nutech.awan.ppob.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Locale;
+import java.util.UUID;
 
 @Component
 public class MembershipServiceImpl implements MembershipService {
 
+    @Value("${app.url}")
+    private String appUrl;
+
     @Autowired
     MessageSource messageSource;
+
+    @Autowired
+    ImageResource imageResource;
 
     @Autowired
     JWTUtil jwtUtil;
@@ -126,8 +137,48 @@ public class MembershipServiceImpl implements MembershipService {
     }
 
     @Override
-    public ProfileViewResponse profileImage(Member member, MultipartFile fileForm) {
+    public ProfileViewResponse profileImage(Member member, HttpServletRequest request) {
 
-        return null;
+        String fileName = UUID.randomUUID().toString() + ".jpg";
+
+        //Validasi Image Valid
+        try (ServletInputStream inputStream = request.getInputStream()) {
+            validationService.isValidImage(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    e.getMessage()
+            );
+        }
+
+        //Simpan File
+        try (ServletInputStream inputStream = request.getInputStream()) {
+            imageResource.saveImage(inputStream, fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    e.getMessage()
+            );
+        }
+
+        //Update Entity
+        member.setProfileImage(String.format("%s/%s", appUrl, fileName));
+        try {
+            memberRepository.update(member);
+        } catch (SQLException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    e.getMessage()
+            );
+        }
+
+        return ProfileViewResponse.builder()
+                .email(member.getEmail())
+                .firstName(member.getFirstName())
+                .lastName(member.getLastName())
+                .profileImage(member.getProfileImage())
+                .build();
     }
 }

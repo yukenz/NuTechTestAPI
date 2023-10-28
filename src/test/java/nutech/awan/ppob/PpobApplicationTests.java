@@ -1,5 +1,6 @@
 package nutech.awan.ppob;
 
+import nutech.awan.ppob.service.ValidationService;
 import nutech.awan.ppob.utils.ImageResource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,9 @@ class PpobApplicationTests {
     @Autowired
     ImageResource imageResource;
 
+    @Autowired
+    ValidationService validationService;
+
     @Test
     void messagesProperties() {
         String message = messageSource.getMessage("token_error", null, Locale.of("id", "ID"));
@@ -35,8 +39,8 @@ class PpobApplicationTests {
         Assertions.assertNotNull(txt);
         Assertions.assertNotNull(image);
 
-        System.out.println(imageResource.isValidImage(image));
-        System.out.println(imageResource.isValidImage(txt));
+        validationService.isValidImage(txt);
+        validationService.isValidImage(image);
 
     }
 }

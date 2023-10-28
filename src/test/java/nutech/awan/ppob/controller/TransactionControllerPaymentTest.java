@@ -47,29 +47,27 @@ public class TransactionControllerPaymentTest {
                 .build();
 
         //OK 200
-        mockMvc.perform(
-                        post("/login")
-                                .accept(MediaType.APPLICATION_JSON)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(formLogin))
-                )
-                .andExpectAll(
-                        status().isOk(),
-                        jsonPath("$.status").value(HttpStatus.OK.value()),
-                        jsonPath("$.message").value(messageSource.getMessage("login_success", null, Locale.of("id", "ID"))),
-                        jsonPath("$.data.token").isString())
-                .andDo(result -> {
-                    String content = result.getResponse().getContentAsString();
+        mockMvc.perform(post("/login")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(formLogin))
+        ).andExpectAll(
+                status().isOk(),
+                jsonPath("$.status").value(HttpStatus.OK.value()),
+                jsonPath("$.message").value(messageSource.getMessage("login_success", null, Locale.of("id", "ID"))),
+                jsonPath("$.data.token").isString()
+        ).andDo(result -> {
+            String content = result.getResponse().getContentAsString();
 
-                    WebResponse<LoginResponse> loginResponseWebResponse = objectMapper.readValue(content, new TypeReference<WebResponse<LoginResponse>>() {
-                    });
+            WebResponse<LoginResponse> loginResponseWebResponse = objectMapper.readValue(content, new TypeReference<WebResponse<LoginResponse>>() {
+            });
 
-                    justCheckService(loginResponseWebResponse.getData().getToken());
+//          justCheckService(loginResponseWebResponse.getData().getToken());
 
-//                    validService(loginResponseWebResponse.getData().getToken());
-//                    invalidService(loginResponseWebResponse.getData().getToken());
+            validService(loginResponseWebResponse.getData().getToken());
+            invalidService(loginResponseWebResponse.getData().getToken());
 
-                });
+        });
     }
 
 
@@ -88,40 +86,38 @@ public class TransactionControllerPaymentTest {
 
     void validService(String token) throws Exception {
 
-        TopUpRequest form = TopUpRequest.builder().topUpAmount(10000L).build();
+        TransactionRequest pajak = TransactionRequest.builder().serviceCode("PLN").build();
 
         mockMvc.perform(post("/transaction")
-                        .header("Authorization", JWTUtil.BEARER_TOKEN_PREFIX + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(form))
-                        .accept(MediaType.APPLICATION_JSON)
-                )
-                .andExpectAll(
-                        status().isOk(),
-                        jsonPath("$.status").value(HttpStatus.OK.value()),
-                        jsonPath("$.message").value(messageSource.getMessage("transaction_success", null, Locale.of("id", "ID"))),
-                        jsonPath("$.data.balance").isNumber()
-                )
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()));
+                .header("Authorization", JWTUtil.BEARER_TOKEN_PREFIX + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(pajak))
+                .accept(MediaType.APPLICATION_JSON)
+        ).andExpectAll(
+                status().isOk(),
+                jsonPath("$.status").value(HttpStatus.OK.value()),
+                jsonPath("$.message").value(messageSource.getMessage("transaction_success", null, Locale.of("id", "ID"))),
+                jsonPath("$.data.invoice_number").isNotEmpty()
+        ).andDo(result -> System.out.println(result.getResponse().getContentAsString()));
     }
 
     void invalidService(String token) throws Exception {
 
         TopUpRequest form = TopUpRequest.builder().topUpAmount(-10000L).build();
 
+        TransactionRequest pajak = TransactionRequest.builder().serviceCode("PLNS").build();
+
         mockMvc.perform(post("/transaction")
-                        .header("Authorization", JWTUtil.BEARER_TOKEN_PREFIX + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(form))
-                        .accept(MediaType.APPLICATION_JSON)
-                )
-                .andExpectAll(
-                        status().isBadRequest(),
-                        jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()),
-                        jsonPath("$.message").value(messageSource.getMessage("topup_invalid", null, Locale.of("id", "ID"))),
-                        jsonPath("$.data").value(Matchers.nullValue())
-                )
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()));
+                .header("Authorization", JWTUtil.BEARER_TOKEN_PREFIX + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(pajak))
+                .accept(MediaType.APPLICATION_JSON)
+        ).andExpectAll(
+                status().isBadRequest(),
+                jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()),
+                jsonPath("$.message").value(messageSource.getMessage("transaction_invalid", null, Locale.of("id", "ID"))),
+                jsonPath("$.data").value(Matchers.nullValue())
+        ).andDo(result -> System.out.println(result.getResponse().getContentAsString()));
     }
 
     @Test

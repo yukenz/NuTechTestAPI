@@ -76,7 +76,7 @@ public class TransactionControllerTopUpTest {
 
     void topUpValidValue(String token) throws Exception {
 
-        TopUpRequest form = TopUpRequest.builder().topUpAmount(10000L).build();
+        TopUpRequest form = TopUpRequest.builder().topUpAmount(50000L).build();
 
         mockMvc.perform(post("/topup")
                         .header("Authorization", JWTUtil.BEARER_TOKEN_PREFIX + token)

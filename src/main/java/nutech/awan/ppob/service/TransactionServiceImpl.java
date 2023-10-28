@@ -61,10 +61,25 @@ public class TransactionServiceImpl implements TransactionService {
             );
         }
 
-        member.setBalance(member.getBalance() + topUpRequest.getTopUpAmount());
+        //Time Stamp
+        Instant now = Instant.now();
+
+        Long moneyAfter = member.getBalance() + topUpRequest.getTopUpAmount();
+
+
+        TransactionHistory transactionHistory = TransactionHistory.builder()
+                .invoice(createInvoice(now))
+                .memberEmail(member.getEmail())
+                .description("Top Up")
+                .amount(topUpRequest.getTopUpAmount())
+                .type(TransactionHistory.TransactionType.TOPUP)
+                .createdOn(now)
+                .build();
 
         //Handle Saving
         try {
+            transactionHistoriRepository.save(transactionHistory);
+            member.setBalance(moneyAfter);
             memberRepository.update(member);
         } catch (SQLException ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());

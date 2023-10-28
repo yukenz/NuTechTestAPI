@@ -2,8 +2,8 @@ package nutech.awan.ppob.controller;
 
 import nutech.awan.ppob.controller.interfaces.TransactionController;
 import nutech.awan.ppob.model.entity.Member;
+import nutech.awan.ppob.model.entity.ServicePayment;
 import nutech.awan.ppob.model.request.TopUpRequest;
-import nutech.awan.ppob.model.request.TransactionRequest;
 import nutech.awan.ppob.model.response.TopUpAndBalanceResponse;
 import nutech.awan.ppob.model.response.TransactionHistoryResponse;
 import nutech.awan.ppob.model.response.TransactionResponse;
@@ -51,8 +51,15 @@ public class TransactionControllerImpl implements TransactionController {
     }
 
     @Override
-    public WebResponse<TransactionResponse> transaction(Member member, TransactionRequest transactionRequest) {
-        return null;
+    public WebResponse<TransactionResponse> transaction(Member member, ServicePayment servicePayment) {
+
+        TransactionResponse transaction = transactionService.transaction(member, servicePayment);
+
+        return WebResponse.<TransactionResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(messageSource.getMessage("transaction_success", null, Locale.of("id", "ID")))
+                .data(transaction)
+                .build();
     }
 
     @Override

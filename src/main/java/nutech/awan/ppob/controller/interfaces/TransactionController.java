@@ -2,6 +2,7 @@ package nutech.awan.ppob.controller.interfaces;
 
 
 import nutech.awan.ppob.model.entity.Member;
+import nutech.awan.ppob.model.entity.ServicePayment;
 import nutech.awan.ppob.model.request.TopUpRequest;
 import nutech.awan.ppob.model.request.TransactionRequest;
 import nutech.awan.ppob.model.response.*;
@@ -34,7 +35,7 @@ public interface TransactionController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    WebResponse<TransactionResponse> transaction(Member member, @RequestBody TransactionRequest transactionRequest);
+    WebResponse<TransactionResponse> transaction(Member member, ServicePayment servicePayment);
 
     /* POST: transaction | TOKEN */
     @GetMapping(

@@ -85,12 +85,12 @@ public class MemberControllerProfileUploadTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .content(inputStream.readAllBytes())
                 )
-//                .andExpectAll(
-//                        status().isOk(),
-//                        jsonPath("$.status").value(HttpStatus.OK.value()),
-//                        jsonPath("$.message").value(messageSource.getMessage("profile_update_success", null, Locale.of("id", "ID"))),
-//                        jsonPath("$.data").isNotEmpty()
-//                )
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.status").value(HttpStatus.OK.value()),
+                        jsonPath("$.message").value(messageSource.getMessage("profile_image_update_success", null, Locale.of("id", "ID"))),
+                        jsonPath("$.data.profile_image").isString()
+                )
                 .andDo(result -> System.out.println(result.getResponse().getContentAsString()));
     }
 

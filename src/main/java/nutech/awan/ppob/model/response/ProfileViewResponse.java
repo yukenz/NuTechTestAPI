@@ -14,6 +14,6 @@ public class ProfileViewResponse {
     private String email;
     private String firstName;
     private String lastName;
-    private String profileImage;
+    private String profile_image;
 
 }

@@ -109,7 +109,7 @@ public class MembershipServiceImpl implements MembershipService {
                 .email(member.getEmail())
                 .firstName(member.getFirstName())
                 .lastName(member.getLastName())
-                .profileImage(member.getProfileImage())
+                .profile_image(member.getProfileImage())
                 .build();
     }
 
@@ -132,7 +132,7 @@ public class MembershipServiceImpl implements MembershipService {
                 .email(member.getEmail())
                 .firstName(member.getFirstName())
                 .lastName(member.getLastName())
-                .profileImage(member.getProfileImage())
+                .profile_image(member.getProfileImage())
                 .build();
     }
 
@@ -178,7 +178,7 @@ public class MembershipServiceImpl implements MembershipService {
                 .email(member.getEmail())
                 .firstName(member.getFirstName())
                 .lastName(member.getLastName())
-                .profileImage(member.getProfileImage())
+                .profile_image(member.getProfileImage())
                 .build();
     }
 }

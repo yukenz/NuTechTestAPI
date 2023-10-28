@@ -2,6 +2,7 @@ package nutech.awan.ppob.service;
 
 import nutech.awan.ppob.model.entity.Member;
 import nutech.awan.ppob.model.request.LoginRequest;
+import nutech.awan.ppob.model.request.ProfileUpdateRequest;
 import nutech.awan.ppob.model.request.RegistrationRequest;
 import nutech.awan.ppob.model.response.LoginResponse;
 import nutech.awan.ppob.model.response.ProfileViewResponse;
@@ -102,8 +103,8 @@ public class MembershipServiceImpl implements MembershipService {
     }
 
     @Override
-    public ProfileViewResponse profileUpdate(Member member, LoginRequest loginRequest) {
-        validationService.validateObject(loginRequest);
+    public ProfileViewResponse profileUpdate(Member member, ProfileUpdateRequest profileUpdateRequest) {
+        validationService.validateObject(profileUpdateRequest);
 
         return null;
     }

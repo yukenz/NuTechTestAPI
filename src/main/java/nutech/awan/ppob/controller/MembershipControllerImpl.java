@@ -63,7 +63,14 @@ public class MembershipControllerImpl implements MembershipController {
 
     @Override
     public WebResponse<ProfileViewResponse> profileUpdate(Member member, ProfileUpdateRequest form) {
-        return null;
+
+        ProfileViewResponse profileViewResponse = membershipService.profileUpdate(member, form);
+
+        return WebResponse.<ProfileViewResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(messageSource.getMessage("profile_update_success", null, Locale.of("id", "ID")))
+                .data(profileViewResponse)
+                .build();
     }
 
     @Override

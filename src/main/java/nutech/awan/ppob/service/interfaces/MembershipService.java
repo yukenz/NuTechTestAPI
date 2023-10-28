@@ -2,6 +2,7 @@ package nutech.awan.ppob.service.interfaces;
 
 import nutech.awan.ppob.model.entity.Member;
 import nutech.awan.ppob.model.request.LoginRequest;
+import nutech.awan.ppob.model.request.ProfileUpdateRequest;
 import nutech.awan.ppob.model.request.RegistrationRequest;
 import nutech.awan.ppob.model.response.LoginResponse;
 import nutech.awan.ppob.model.response.ProfileViewResponse;
@@ -17,7 +18,7 @@ public interface MembershipService {
 
     ProfileViewResponse profile(Member member);
 
-    ProfileViewResponse profileUpdate(Member member, LoginRequest loginRequest);
+    ProfileViewResponse profileUpdate(Member member, ProfileUpdateRequest profileUpdateRequest);
 
     ProfileViewResponse profileImage(Member member, MultipartFile fileForm);
 

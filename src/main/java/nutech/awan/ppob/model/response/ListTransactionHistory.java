@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.Instant;
 
 @Data
 @Builder
@@ -17,5 +17,5 @@ public class ListTransactionHistory {
     private String transaction_type;
     private String description;
     private Long total_amount;
-    private Date created_on;
+    private Instant created_on;
 }

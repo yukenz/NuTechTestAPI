@@ -24,17 +24,25 @@ public class InformationControllerImpl implements InformationController {
 
     @Override
     public WebResponse<List<ListBannerResponse>> banner() {
-        List<ListBannerResponse> banner = informationService.banner();
+        List<ListBannerResponse> banners = informationService.banner();
 
         return WebResponse.<List<ListBannerResponse>>builder()
                 .status(HttpStatus.OK.value())
                 .message(messageSource.getMessage("success", null, Locale.of("id", "ID")))
-                .data(banner)
+                .data(banners)
                 .build();
     }
 
     @Override
     public WebResponse<List<ListServiceResponse>> service(Member member) {
-        return null;
+
+        List<ListServiceResponse> services = informationService.service();
+
+        return WebResponse.<List<ListServiceResponse>>builder()
+                .status(HttpStatus.OK.value())
+                .message(messageSource.getMessage("success", null, Locale.of("id", "ID")))
+                .data(services)
+                .build();
+
     }
 }

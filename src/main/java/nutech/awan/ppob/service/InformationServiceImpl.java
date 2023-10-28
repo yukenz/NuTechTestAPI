@@ -1,9 +1,11 @@
 package nutech.awan.ppob.service;
 
 import nutech.awan.ppob.model.entity.Banner;
+import nutech.awan.ppob.model.entity.ServicePayment;
 import nutech.awan.ppob.model.response.ListBannerResponse;
 import nutech.awan.ppob.model.response.ListServiceResponse;
 import nutech.awan.ppob.repository.interfaces.BannerRepository;
+import nutech.awan.ppob.repository.interfaces.ServicePaymentRepository;
 import nutech.awan.ppob.service.interfaces.InformationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,9 @@ public class InformationServiceImpl implements InformationService {
 
     @Autowired
     private BannerRepository bannerRepository;
+
+    @Autowired
+    private ServicePaymentRepository servicePaymentRepository;
 
     @Override
     public List<ListBannerResponse> banner() {
@@ -43,6 +48,22 @@ public class InformationServiceImpl implements InformationService {
 
     @Override
     public List<ListServiceResponse> service() {
-        return null;
+
+        try {
+            List<ServicePayment> services = servicePaymentRepository.findAll();
+
+            return services.stream().map(service -> ListServiceResponse.builder()
+                    .service_code(service.getCode())
+                    .service_name(service.getName())
+                    .service_icon(service.getIcon_url())
+                    .service_tarif(service.getPrice())
+                    .build()).toList();
+        } catch (SQLException ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    ex.getMessage());
+        }
+
+
     }
 }

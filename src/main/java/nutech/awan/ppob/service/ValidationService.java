@@ -51,4 +51,19 @@ public class ValidationService {
 
     }
 
+    public Long validateBalance(long balance, long purchase) {
+
+        long moneyAfter = balance - purchase;
+
+        if (moneyAfter < 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    messageSource.getMessage("transaction_balanceproblem", null, Locale.of("id", "ID"))
+            );
+        }
+
+        return moneyAfter;
+
+    }
+
 }

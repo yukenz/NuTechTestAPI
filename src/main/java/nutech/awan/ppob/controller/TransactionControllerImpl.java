@@ -40,7 +40,14 @@ public class TransactionControllerImpl implements TransactionController {
 
     @Override
     public WebResponse<TopUpAndBalanceResponse> topup(Member member, TopUpRequest topUpRequest) {
-        return null;
+
+        TopUpAndBalanceResponse topup = transactionService.topup(member, topUpRequest);
+
+        return WebResponse.<TopUpAndBalanceResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(messageSource.getMessage("topup_success", null, Locale.of("id", "ID")))
+                .data(topup)
+                .build();
     }
 
     @Override

@@ -70,6 +70,7 @@ public class MemberControllerProfileUploadTest {
                     });
 
                     updateImage(loginResponseWebResponse.getData().getToken());
+                    updateImageWithInvalidJpg(loginResponseWebResponse.getData().getToken());
 
                 });
     }
@@ -90,6 +91,26 @@ public class MemberControllerProfileUploadTest {
                         jsonPath("$.status").value(HttpStatus.OK.value()),
                         jsonPath("$.message").value(messageSource.getMessage("profile_image_update_success", null, Locale.of("id", "ID"))),
                         jsonPath("$.data.profile_image").isString()
+                )
+                .andDo(result -> System.out.println(result.getResponse().getContentAsString()));
+    }
+
+    void updateImageWithInvalidJpg(String token) throws Exception {
+
+        Resource resource = resourceLoader.getResource("classpath:/static/my.txt");
+        InputStream inputStream = resource.getInputStream();
+
+        mockMvc.perform(put("/profile/image")
+                        .header("Authorization", JWTUtil.BEARER_TOKEN_PREFIX + token)
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(inputStream.readAllBytes())
+                )
+                .andExpectAll(
+                        status().isBadRequest(),
+                        jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()),
+                        jsonPath("$.message").value(messageSource.getMessage("profile_image_update_invalid", null, Locale.of("id", "ID"))),
+                        jsonPath("$.data").value(Matchers.nullValue())
                 )
                 .andDo(result -> System.out.println(result.getResponse().getContentAsString()));
     }

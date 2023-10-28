@@ -148,7 +148,7 @@ public class MembershipServiceImpl implements MembershipService {
             e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
-                    e.getMessage()
+                    messageSource.getMessage("profile_image_update_invalid", null, Locale.of("id", "ID"))
             );
         }
 

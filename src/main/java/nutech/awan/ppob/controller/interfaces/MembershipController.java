@@ -39,7 +39,7 @@ public interface MembershipController {
 
     /* PUT: profile->update | TOKEN */
     @PutMapping(
-            path = "profile/update",
+            path = "/profile/update",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -47,7 +47,7 @@ public interface MembershipController {
 
     /* PUT: profile->image | TOKEN */
     @PutMapping(
-            path = "profile/image",
+            path = "/profile/image",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )

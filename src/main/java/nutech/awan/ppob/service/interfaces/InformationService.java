@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public interface InfomationService {
+public interface InformationService {
 
     List<ListBannerResponse> banner();
 

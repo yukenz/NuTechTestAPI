@@ -10,21 +10,23 @@ import nutech.awan.ppob.model.response.LoginResponse;
 import nutech.awan.ppob.model.response.ProfileViewResponse;
 import nutech.awan.ppob.repository.interfaces.MemberRepository;
 import nutech.awan.ppob.service.interfaces.MembershipService;
-import nutech.awan.ppob.utils.ImageResource;
 import nutech.awan.ppob.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.imageio.ImageIO;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Locale;
-import java.util.UUID;
 
 @Component
 public class MembershipServiceImpl implements MembershipService {
@@ -36,7 +38,7 @@ public class MembershipServiceImpl implements MembershipService {
     private MessageSource messageSource;
 
     @Autowired
-    private ImageResource imageResource;
+    private ResourceLoader resourceLoader;
 
     @Autowired
     private JWTUtil jwtUtil;
@@ -139,27 +141,22 @@ public class MembershipServiceImpl implements MembershipService {
     @Override
     public ProfileViewResponse profileImage(Member member, HttpServletRequest request) {
 
-        String fileName = UUID.randomUUID().toString() + ".jpg";
+        /* Get Resource Path at Runtime a.k.a Directotory*/
+        Resource assetsFolder = resourceLoader.getResource("classpath:/assets/");
+        /* Parsing Name File a.k.a FileName.ext */
+        String fileName = member.getEmail().replaceAll("\\W", "_") + ".jpg";
 
         //Validasi Image Valid
         try (ServletInputStream inputStream = request.getInputStream()) {
-            validationService.isValidImage(inputStream);
+            Path pathFile = Path.of(
+                    Path.of(assetsFolder.getURI()).toString() + "/" + fileName
+            );
+            ImageIO.write(validationService.isValidImage(inputStream), "jpg", pathFile.toFile());
         } catch (IOException e) {
             e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     messageSource.getMessage("profile_image_update_invalid", null, Locale.of("id", "ID"))
-            );
-        }
-
-        //Simpan File
-        try (ServletInputStream inputStream = request.getInputStream()) {
-            imageResource.saveImage(inputStream, fileName);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    e.getMessage()
             );
         }
 

@@ -44,7 +44,7 @@ public class MemberControllerProfileUploadTest {
     ObjectMapper objectMapper;
 
     @Test
-    void loginAndUpdateImage() throws Exception {
+    void loginAndUpdateImage_Valid_Invalid() throws Exception {
 
         LoginRequest formLogin = LoginRequest.builder()
                 .email("yuyun.purniawan@gmail.com")

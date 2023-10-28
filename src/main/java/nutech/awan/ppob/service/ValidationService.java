@@ -35,12 +35,15 @@ public class ValidationService {
 
     }
 
-    public void isValidImage(InputStream inputStream) {
+    public BufferedImage isValidImage(InputStream inputStream) {
 
         try (inputStream) {
             BufferedImage image = ImageIO.read(inputStream);
             image.getHeight();
             image.getWidth();
+
+            return image;
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(

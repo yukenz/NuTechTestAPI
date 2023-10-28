@@ -6,8 +6,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -43,12 +41,15 @@ public class ImageResource implements ResourceLoaderAware {
         Path pathFile = Path.of(Path.of(assetsFolder.getURI()).toString() + "/" + fileName);
 
         //Create
-        Files.createFile(pathFile);
+        if (!Files.exists(pathFile)) {
+            Files.createFile(pathFile);
+        }
 
 
         //Write ke file
         try (OutputStream outputStream = Files.newOutputStream(pathFile)) {
             outputStream.write(inputStream.readAllBytes());
+            outputStream.flush();
         }
 
     }

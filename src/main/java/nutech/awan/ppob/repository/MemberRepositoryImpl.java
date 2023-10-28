@@ -77,6 +77,31 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
+    public void update(Member member) throws SQLException {
+
+        try (
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(
+                        String.format("update %s set first_name = ?, last_name  = ?, password = ?, profile_image = ?, balance = ? where email = ?;", MemberRepository.TABLENAME)
+                );
+        ) {
+
+            preparedStatement.setString(1, member.getFirstName());
+            preparedStatement.setString(2, member.getLastName());
+            preparedStatement.setString(3, member.getPassword());
+            preparedStatement.setString(4, member.getProfileImage());
+            preparedStatement.setLong(5, member.getBalance());
+            preparedStatement.setString(6, member.getEmail());
+
+            preparedStatement.execute();
+
+        } catch (SQLException e) {
+            throw e;
+        }
+
+    }
+
+    @Override
     public boolean isIdExist(String email) {
 
         try (

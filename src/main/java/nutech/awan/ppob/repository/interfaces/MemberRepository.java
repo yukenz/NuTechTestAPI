@@ -15,6 +15,8 @@ public interface MemberRepository {
 
     void save(Member member) throws SQLException;
 
+    void update(Member member) throws SQLException;
+
     boolean isIdExist(String email);
 
     void flush();

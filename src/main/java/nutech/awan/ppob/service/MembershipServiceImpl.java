@@ -104,9 +104,25 @@ public class MembershipServiceImpl implements MembershipService {
 
     @Override
     public ProfileViewResponse profileUpdate(Member member, ProfileUpdateRequest profileUpdateRequest) {
+
         validationService.validateObject(profileUpdateRequest);
 
-        return null;
+        //Sudah di verifikasi not blank jadi set saja
+        member.setFirstName(profileUpdateRequest.getFirstName());
+        member.setLastName(profileUpdateRequest.getLastName());
+
+        try {
+            memberRepository.update(member);
+        } catch (SQLException ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
+
+        return ProfileViewResponse.builder()
+                .email(member.getEmail())
+                .firstName(member.getFirstName())
+                .lastName(member.getLastName())
+                .profileImage(member.getProfileImage())
+                .build();
     }
 
     @Override

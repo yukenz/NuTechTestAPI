@@ -38,6 +38,7 @@ public class MemberRepositoryImpl implements MemberRepository {
                     .password(resultSet.getString("password"))
                     .firstName(resultSet.getString("first_name"))
                     .lastName(resultSet.getString("last_name"))
+                    .profileImage(resultSet.getString("profile_image"))
                     .balance(resultSet.getLong("balance"))
                     .build();
 

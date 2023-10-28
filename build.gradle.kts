@@ -24,6 +24,7 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.data:spring-data-commons")
     implementation("com.zaxxer:HikariCP")
     //Jwt
     implementation("io.jsonwebtoken:jjwt:0.9.1")

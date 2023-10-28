@@ -8,15 +8,34 @@ import nutech.awan.ppob.model.response.TopUpAndBalanceResponse;
 import nutech.awan.ppob.model.response.TransactionHistoryResponse;
 import nutech.awan.ppob.model.response.TransactionResponse;
 import nutech.awan.ppob.model.response.WebResponse;
+import nutech.awan.ppob.service.interfaces.TransactionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Locale;
 
 @Component
 public class TransactionControllerImpl implements TransactionController {
+
+    @Autowired
+    TransactionService transactionService;
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public WebResponse<TopUpAndBalanceResponse> balance(Member member) {
-        return null;
+
+        TopUpAndBalanceResponse balance = transactionService.balance(member);
+
+        return WebResponse.<TopUpAndBalanceResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message(messageSource.getMessage("balance_success", null, Locale.of("id", "ID")))
+                .data(balance)
+                .build();
+
     }
 
     @Override

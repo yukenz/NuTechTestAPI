@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class InformationControllerServiceTest {
+public class TransactionControllerBalanceTest {
 
     @Autowired
     MessageSource messageSource;
@@ -38,7 +38,7 @@ public class InformationControllerServiceTest {
 
 
     @Test
-    void loginAndGetService() throws Exception {
+    void loginAndGetBalance() throws Exception {
 
         LoginRequest formLogin = LoginRequest.builder()
                 .email("yuyun.purniawan@gmail.com")
@@ -63,31 +63,30 @@ public class InformationControllerServiceTest {
                     WebResponse<LoginResponse> loginResponseWebResponse = objectMapper.readValue(content, new TypeReference<WebResponse<LoginResponse>>() {
                     });
 
-                    getService(loginResponseWebResponse.getData().getToken());
+                    getBalance(loginResponseWebResponse.getData().getToken());
 
                 });
     }
 
-    void getService(String token) throws Exception {
+    void getBalance(String token) throws Exception {
 
-        mockMvc.perform(get("/services")
+        mockMvc.perform(get("/balance")
                         .header("Authorization", JWTUtil.BEARER_TOKEN_PREFIX + token)
                         .accept(MediaType.APPLICATION_JSON)
                 )
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.status").value(HttpStatus.OK.value()),
-                        jsonPath("$.message").value(messageSource.getMessage("success", null, Locale.of("id", "ID"))),
-                        jsonPath("$.data").isArray()
+                        jsonPath("$.message").value(messageSource.getMessage("balance_success", null, Locale.of("id", "ID"))),
+                        jsonPath("$.data.balance").isNumber()
                 )
                 .andDo(result -> System.out.println(result.getResponse().getContentAsString()));
-
     }
 
     @Test
-    void getServiceWithInvalidToken() throws Exception {
+    void getBalanceWithInvalidToken() throws Exception {
 
-        mockMvc.perform(get("/services")
+        mockMvc.perform(get("/balance")
                         .header("Authorization", JWTUtil.BEARER_TOKEN_PREFIX + "dwda")
                         .accept(MediaType.APPLICATION_JSON)
                 )

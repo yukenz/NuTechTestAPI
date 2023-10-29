@@ -83,7 +83,7 @@ public class TransactionHistoryRepositoryImpl implements TransactionHistoriRepos
                         .build());
             }
 
-            return transactions;
+            return transactions.reversed();
 
         } catch (SQLException e) {
             throw e;

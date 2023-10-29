@@ -4,7 +4,9 @@ import com.zaxxer.hikari.HikariDataSource;
 import nutech.awan.ppob.model.entity.Member;
 import nutech.awan.ppob.repository.interfaces.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.*;
 import java.util.Optional;
@@ -99,7 +101,6 @@ public class MemberRepositoryImpl implements MemberRepository {
         } catch (SQLException e) {
             throw e;
         }
-
     }
 
     @Override
@@ -123,6 +124,54 @@ public class MemberRepositoryImpl implements MemberRepository {
             return false;
         }
 
+    }
+
+    @Override
+    public Long updateBalanceById(String email, Long amountAdd) throws SQLException {
+
+        try (
+                Connection connection = dataSource.getConnection();
+                PreparedStatement updateStatement = connection.prepareStatement(
+                        String.format("update %s set balance = ? where email = ?;", MemberRepository.TABLENAME)
+                );
+                PreparedStatement queryStatement = connection.prepareStatement(
+                        String.format("select balance from %s where email = ? for update;", MemberRepository.TABLENAME)
+                )
+        ) {
+            //Transaction
+            connection.setAutoCommit(false);
+
+
+            queryStatement.setString(1, email);
+            ResultSet resultSet = queryStatement.executeQuery();
+            //result kosong
+            if (!resultSet.next()) {
+                throw new ResponseStatusException(
+                        HttpStatus.EXPECTATION_FAILED,
+                        "Email untuk update balance tidak ditemukan"
+                );
+            }
+
+            Long balanceAfter = resultSet.getLong("balance") + amountAdd;
+
+            //Update
+            updateStatement.setLong(1, balanceAfter);
+            updateStatement.setString(2, email);
+            updateStatement.execute();
+
+            //Commit / Rollback mechanism
+            try {
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                throw e;
+            }
+
+            return balanceAfter;
+
+        } catch (SQLException e) {
+            throw e;
+        }
     }
 
     @Override

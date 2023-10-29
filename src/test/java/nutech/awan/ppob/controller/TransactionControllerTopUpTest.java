@@ -39,7 +39,7 @@ public class TransactionControllerTopUpTest {
 
 
     @Test
-    void loginAndGetBalance() throws Exception {
+    void loginAndTopUpBalance() throws Exception {
 
         LoginRequest formLogin = LoginRequest.builder()
                 .email("yuyun.purniawan@gmail.com")

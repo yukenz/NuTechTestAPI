@@ -26,7 +26,6 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Stream;
 
 @Component
 public class TransactionServiceImpl implements TransactionService {
@@ -68,9 +67,6 @@ public class TransactionServiceImpl implements TransactionService {
         //Time Stamp
         Instant now = Instant.now();
 
-        Long moneyAfter = member.getBalance() + topUpRequest.getTopUpAmount();
-
-
         TransactionHistory transactionHistory = TransactionHistory.builder()
                 .invoice(createInvoice(now))
                 .memberEmail(member.getEmail())
@@ -83,8 +79,8 @@ public class TransactionServiceImpl implements TransactionService {
         //Handle Saving
         try {
             transactionHistoriRepository.save(transactionHistory);
-            member.setBalance(moneyAfter);
-            memberRepository.update(member);
+            Long balanceAfter = memberRepository.updateBalanceById(member.getEmail(), topUpRequest.getTopUpAmount());
+            member.setBalance(balanceAfter);
         } catch (SQLException ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
@@ -111,6 +107,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .type(TransactionHistory.TransactionType.PAYMENT)
                 .createdOn(now)
                 .build();
+
         try {
             transactionHistoriRepository.save(transactionHistory);
             member.setBalance(moneyAfter);
@@ -170,7 +167,6 @@ public class TransactionServiceImpl implements TransactionService {
     public String createInvoice(Instant instantTime) {
 
         SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy-HHmmssSS");
-
         String dateHash = sdf.format(Date.from(instantTime));
 
         return String.format("INV%s", dateHash);

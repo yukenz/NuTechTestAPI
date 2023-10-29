@@ -17,6 +17,8 @@ public interface MemberRepository {
 
     void update(Member member) throws SQLException;
 
+    Long updateBalanceById(String email, Long balanceAfter) throws SQLException;
+
     boolean isIdExist(String email);
 
     void flush();

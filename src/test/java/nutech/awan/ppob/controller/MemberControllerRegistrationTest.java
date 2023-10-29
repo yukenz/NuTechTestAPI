@@ -1,6 +1,7 @@
 package nutech.awan.ppob.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.bytebuddy.utility.RandomString;
 import nutech.awan.ppob.model.request.RegistrationRequest;
 import nutech.awan.ppob.repository.interfaces.MemberRepository;
 import org.hamcrest.Matchers;
@@ -45,27 +46,26 @@ public class MemberControllerRegistrationTest {
     @Test
     void testRegisterAndDuplicate() throws Exception {
 
-        setUp();
+//        setUp();
 
         RegistrationRequest formRegistration = RegistrationRequest.builder()
-                .email("yuyun.purniawan@gmail.com")
+                .email(RandomString.make(10) + "@gmail.com")
                 .password("theravian")
                 .firstName("yuyun")
                 .lastName("purniawan")
                 .build();
 
         //OK 200
-        mockMvc.perform(
-                post("/registration")
+        mockMvc.perform(post("/registration")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(formRegistration))
-        ).andExpectAll(
-                status().isOk(),
-                jsonPath("$.status").value(200),
-                jsonPath("$.message").value(messageSource.getMessage("register_success", null, Locale.of("id", "ID"))),
-                jsonPath("$.data").value(Matchers.nullValue())
-        );
+                        .content(objectMapper.writeValueAsString(formRegistration)))
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.status").value(200),
+                        jsonPath("$.message").value(messageSource.getMessage("register_success", null, Locale.of("id", "ID"))),
+                        jsonPath("$.data").value(Matchers.nullValue()))
+                .andDo(print);
 
         //Duplikat Email 422
         mockMvc.perform(

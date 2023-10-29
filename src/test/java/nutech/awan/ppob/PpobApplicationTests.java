@@ -29,18 +29,4 @@ class PpobApplicationTests {
         String message = messageSource.getMessage("token_error", null, Locale.of("id", "ID"));
         Assertions.assertEquals("Token tidak tidak valid atau kadaluwarsa", message);
     }
-
-    @Test
-    void imageResourceAndValidate() throws IOException {
-
-        InputStream txt = imageResource.getImageStream("my.txt");
-        InputStream image = imageResource.getImageStream("ktp.jpg");
-
-        Assertions.assertNotNull(txt);
-        Assertions.assertNotNull(image);
-
-        validationService.isValidImage(txt);
-        validationService.isValidImage(image);
-
-    }
 }

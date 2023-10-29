@@ -15,6 +15,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Objects;
+
 @Component
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -34,6 +36,10 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String token = request.getHeader("Authorization");
+
+        if (Objects.isNull(token)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token Kosong");
+        }
 
         Claims claims = jwtUtil.parseBearerToken(token);
         String email = claims.getSubject();

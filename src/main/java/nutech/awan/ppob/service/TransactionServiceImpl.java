@@ -76,7 +76,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .createdOn(now)
                 .build();
 
-        //Handle Saving
+        //Transact Mode
         try {
             transactionHistoriRepository.save(transactionHistory);
             Long balanceAfter = memberRepository.updateBalanceById(member.getEmail(), topUpRequest.getTopUpAmount());
@@ -96,8 +96,7 @@ public class TransactionServiceImpl implements TransactionService {
         //Time Stamp
         Instant now = Instant.now();
 
-        //Check Balance For Transaction
-        Long moneyAfter = validationService.validateBalance(member.getBalance(), servicePayment.getPrice());
+        validationService.validateBalance(member.getBalance(), servicePayment.getPrice());
 
         TransactionHistory transactionHistory = TransactionHistory.builder()
                 .invoice(createInvoice(now))
@@ -110,7 +109,9 @@ public class TransactionServiceImpl implements TransactionService {
 
         try {
             transactionHistoriRepository.save(transactionHistory);
-            member.setBalance(moneyAfter);
+            //Transact Mode
+            Long balanceAfter = memberRepository.updateBalanceById(member.getEmail(), -servicePayment.getPrice());
+            member.setBalance(balanceAfter);
             memberRepository.update(member);
         } catch (SQLException e) {
             throw new ResponseStatusException(

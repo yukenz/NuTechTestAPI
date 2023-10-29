@@ -54,7 +54,7 @@ public class ValidationService {
 
     }
 
-    public Long validateBalance(long balance, long purchase) {
+    public void validateBalance(long balance, long purchase) {
 
         long moneyAfter = balance - purchase;
 
@@ -64,8 +64,6 @@ public class ValidationService {
                     messageSource.getMessage("transaction_balanceproblem", null, Locale.of("id", "ID"))
             );
         }
-
-        return moneyAfter;
 
     }
 

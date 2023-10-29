@@ -6,6 +6,7 @@ import nutech.awan.ppob.model.entity.Member;
 import nutech.awan.ppob.repository.interfaces.MemberRepository;
 import nutech.awan.ppob.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Locale;
 import java.util.Objects;
 
 @Component
@@ -22,6 +24,9 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Autowired
     JWTUtil jwtUtil;
+
+    @Autowired
+    MessageSource messageSource;
 
     @Autowired
     MemberRepository memberRepository;
@@ -38,7 +43,10 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String token = request.getHeader("Authorization");
 
         if (Objects.isNull(token)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token Kosong");
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    messageSource.getMessage("token_error", null, Locale.of("id", "ID"))
+            );
         }
 
         Claims claims = jwtUtil.parseBearerToken(token);

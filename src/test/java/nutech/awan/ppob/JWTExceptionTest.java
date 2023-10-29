@@ -27,8 +27,8 @@ public class JWTExceptionTest {
         RegistrationRequest formRegistration = RegistrationRequest.builder()
                 .email("yu")
                 .password("asdwfas")
-                .firstName("awan")
-                .lastName("theravian")
+                .first_name("awan")
+                .last_name("theravian")
                 .build();
 
         mockMvc.perform(

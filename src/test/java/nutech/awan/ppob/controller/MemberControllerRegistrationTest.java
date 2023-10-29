@@ -51,8 +51,8 @@ public class MemberControllerRegistrationTest {
         RegistrationRequest formRegistration = RegistrationRequest.builder()
                 .email(RandomString.make(10) + "@gmail.com")
                 .password("theravian")
-                .firstName("yuyun")
-                .lastName("purniawan")
+                .first_name("yuyun")
+                .last_name("purniawan")
                 .build();
 
         //OK 200
@@ -88,8 +88,8 @@ public class MemberControllerRegistrationTest {
         RegistrationRequest formRegistration = RegistrationRequest.builder()
                 .email("yuyun.purniawangmail.com")
                 .password("1234567")
-                .firstName("yuyun")
-                .lastName("purniawan")
+                .first_name("yuyun")
+                .last_name("purniawan")
                 .build();
 
         //BadRequest 400

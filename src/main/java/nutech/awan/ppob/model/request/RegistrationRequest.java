@@ -19,10 +19,10 @@ public class RegistrationRequest {
     private String email;
 
     @NotBlank
-    private String firstName;
+    private String first_name;
 
     @NotBlank
-    private String lastName;
+    private String last_name;
 
     @NotBlank
     @Length(min = 8)

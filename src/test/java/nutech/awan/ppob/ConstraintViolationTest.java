@@ -2,7 +2,6 @@ package nutech.awan.ppob;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.Registration;
 import nutech.awan.ppob.model.request.RegistrationRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +28,8 @@ public class ConstraintViolationTest {
         RegistrationRequest formRegistration = RegistrationRequest.builder()
                 .email("yu")
                 .password("asdwfas")
-                .firstName("awan")
-                .lastName("theravian")
+                .first_name("awan")
+                .last_name("theravian")
                 .build();
 
         mockMvc.perform(

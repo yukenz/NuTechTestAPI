@@ -61,8 +61,8 @@ public class MembershipServiceImpl implements MembershipService {
         Member member = Member.builder()
                 .email(registrationRequest.getEmail())
                 .password(DigestUtils.md5DigestAsHex(registrationRequest.getPassword().getBytes()))
-                .firstName(registrationRequest.getFirstName())
-                .lastName(registrationRequest.getLastName())
+                .firstName(registrationRequest.getFirst_name())
+                .lastName(registrationRequest.getLast_name())
                 .profileImage(null)
                 .balance(0L)
                 .build();

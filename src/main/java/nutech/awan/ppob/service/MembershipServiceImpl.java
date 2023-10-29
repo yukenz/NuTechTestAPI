@@ -121,8 +121,8 @@ public class MembershipServiceImpl implements MembershipService {
         validationService.validateObject(profileUpdateRequest);
 
         //Sudah di verifikasi not blank jadi set saja
-        member.setFirstName(profileUpdateRequest.getFirstName());
-        member.setLastName(profileUpdateRequest.getLastName());
+        member.setFirstName(profileUpdateRequest.getFirst_name());
+        member.setLastName(profileUpdateRequest.getLast_name());
 
         try {
             memberRepository.update(member);

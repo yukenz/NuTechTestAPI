@@ -119,8 +119,8 @@ public class MemberControllerProfileUploadTest {
     void getProfileWitInvalidToken() throws Exception {
 
         ProfileUpdateRequest formUpdateProfile = ProfileUpdateRequest.builder()
-                .firstName("yuyun")
-                .lastName("purniawan")
+                .first_name("yuyun")
+                .last_name("purniawan")
                 .build();
 
         mockMvc.perform(put("/profile/update")

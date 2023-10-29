@@ -71,8 +71,8 @@ public class MemberControllerProfileUpdateTest {
     void updateProfile(String token) throws Exception {
 
         ProfileUpdateRequest formUpdateProfile = ProfileUpdateRequest.builder()
-                .firstName("yukenz")
-                .lastName("purniawan")
+                .first_name("yukenz")
+                .last_name("purniawan")
                 .build();
 
         mockMvc.perform(put("/profile/update")
@@ -94,8 +94,8 @@ public class MemberControllerProfileUpdateTest {
     void getProfileWitInvalidToken() throws Exception {
 
         ProfileUpdateRequest formUpdateProfile = ProfileUpdateRequest.builder()
-                .firstName("yuyun")
-                .lastName("purniawan")
+                .first_name("yuyun")
+                .last_name("purniawan")
                 .build();
 
         mockMvc.perform(put("/profile/update")

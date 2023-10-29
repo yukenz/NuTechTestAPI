@@ -1,9 +1,6 @@
-FROM azul/zulu-openjdk-alpine:latest
-
-WORKDIR /app
-
+FROM azul/zulu-openjdk:latest
+ENV APPDIR /app
+WORKDIR $APPDIR
 COPY . .
-
 EXPOSE 8080
-
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","/app.jar"]

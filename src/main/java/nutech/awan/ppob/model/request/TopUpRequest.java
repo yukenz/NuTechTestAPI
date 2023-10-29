@@ -15,6 +15,6 @@ public class TopUpRequest {
 
     @NotNull
     @Min(0)
-    private Long topUpAmount;
+    private Long top_up_amount;
 
 }

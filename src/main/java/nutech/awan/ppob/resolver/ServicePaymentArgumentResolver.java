@@ -47,7 +47,7 @@ public class ServicePaymentArgumentResolver implements HandlerMethodArgumentReso
 
 
         ServicePayment servicePayment = servicePaymentRepository
-                .findById(transactionRequest.getServiceCode())
+                .findById(transactionRequest.getService_code())
                 .orElseThrow(() -> new ResponseStatusException(
                                 HttpStatus.BAD_REQUEST,
                                 messageSource.getMessage("transaction_invalid", null, Locale.of("id", "ID"))

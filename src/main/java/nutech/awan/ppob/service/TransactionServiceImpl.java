@@ -71,7 +71,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .invoice(createInvoice(now))
                 .memberEmail(member.getEmail())
                 .description("Top Up")
-                .amount(topUpRequest.getTopUpAmount())
+                .amount(topUpRequest.getTop_up_amount())
                 .type(TransactionHistory.TransactionType.TOPUP)
                 .createdOn(now)
                 .build();
@@ -79,7 +79,7 @@ public class TransactionServiceImpl implements TransactionService {
         //Transact Mode
         try {
             transactionHistoriRepository.save(transactionHistory);
-            Long balanceAfter = memberRepository.updateBalanceById(member.getEmail(), topUpRequest.getTopUpAmount());
+            Long balanceAfter = memberRepository.updateBalanceById(member.getEmail(), topUpRequest.getTop_up_amount());
             member.setBalance(balanceAfter);
         } catch (SQLException ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());

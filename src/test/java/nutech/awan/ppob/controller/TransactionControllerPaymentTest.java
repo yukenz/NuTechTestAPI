@@ -73,7 +73,7 @@ public class TransactionControllerPaymentTest {
 
     void justCheckService(String token) throws Exception {
 
-        TransactionRequest pajak = TransactionRequest.builder().serviceCode("PAJAK").build();
+        TransactionRequest pajak = TransactionRequest.builder().service_code("PAJAK").build();
 
         mockMvc.perform(post("/transaction")
                 .header("Authorization", JWTUtil.BEARER_TOKEN_PREFIX + token)
@@ -86,7 +86,7 @@ public class TransactionControllerPaymentTest {
 
     void validService(String token) throws Exception {
 
-        TransactionRequest pajak = TransactionRequest.builder().serviceCode("PLN").build();
+        TransactionRequest pajak = TransactionRequest.builder().service_code("PLN").build();
 
         mockMvc.perform(post("/transaction")
                 .header("Authorization", JWTUtil.BEARER_TOKEN_PREFIX + token)
@@ -103,9 +103,9 @@ public class TransactionControllerPaymentTest {
 
     void invalidService(String token) throws Exception {
 
-        TopUpRequest form = TopUpRequest.builder().topUpAmount(-10000L).build();
+        TopUpRequest form = TopUpRequest.builder().top_up_amount(-10000L).build();
 
-        TransactionRequest pajak = TransactionRequest.builder().serviceCode("PLNS").build();
+        TransactionRequest pajak = TransactionRequest.builder().service_code("PLNS").build();
 
         mockMvc.perform(post("/transaction")
                 .header("Authorization", JWTUtil.BEARER_TOKEN_PREFIX + token)
@@ -123,7 +123,7 @@ public class TransactionControllerPaymentTest {
     @Test
     void serviceWithoutLogin() throws Exception {
 
-        TopUpRequest form = TopUpRequest.builder().topUpAmount(10000L).build();
+        TopUpRequest form = TopUpRequest.builder().top_up_amount(10000L).build();
 
         mockMvc.perform(post("/transaction")
                         .header("Authorization", JWTUtil.BEARER_TOKEN_PREFIX + "dawdw")

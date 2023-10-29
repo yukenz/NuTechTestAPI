@@ -71,7 +71,7 @@ public class TransactionControllerHistoryTest {
 
     void historyCheck(String token) throws Exception {
 
-        TransactionRequest pajak = TransactionRequest.builder().serviceCode("PLN").build();
+        TransactionRequest pajak = TransactionRequest.builder().service_code("PLN").build();
 
         mockMvc.perform(get("/transaction/history")
                 .header("Authorization", JWTUtil.BEARER_TOKEN_PREFIX + token)
@@ -90,7 +90,7 @@ public class TransactionControllerHistoryTest {
     @Test
     void historyCheckWithoutLogin() throws Exception {
 
-        TopUpRequest form = TopUpRequest.builder().topUpAmount(10000L).build();
+        TopUpRequest form = TopUpRequest.builder().top_up_amount(10000L).build();
 
         mockMvc.perform(get("/transaction/history")
                         .header("Authorization", JWTUtil.BEARER_TOKEN_PREFIX + "dawdw")
